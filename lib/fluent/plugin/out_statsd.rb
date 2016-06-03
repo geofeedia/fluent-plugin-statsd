@@ -34,7 +34,7 @@ module Fluent
     def write(chunk)
       chunk.msgpack_each do |tag, time, record|
         level = tag.split('.').last.downcase
-        if level != info
+        if level != 'info'
           next # all our metrics are logged at an info level
         end
 
@@ -54,15 +54,15 @@ module Fluent
 
           # timer
           if field.match /took<(long|int)>$/
-            @statsd.timing field.sub /<(long|int)>$/, '' + tags, record[field].to_i
+            @statsd.timing field.sub(/<(long|int)>$/, '') + tags, record[field].to_i
 
           # counters
           elsif field.match /count<(long|int)>$/
-            @statsd.increment field.sub /<(long|int)>$/, '' + tags, record[field].to_i
+            @statsd.increment field.sub(/<(long|int)>$/, '') + tags, record[field].to_i
           elsif field.match /success<int>$/
-            @statsd.increment field.sub /<int>$/, '' + tags, record[field].to_i
+            @statsd.increment field.sub(/<int>$/, '') + tags, record[field].to_i
           elsif field.match /error<int>$/
-            @statsd.increment field.sub /<int>$/, '' + tags, record[field].to_i
+            @statsd.increment field.sub(/<int>$/, '') + tags, record[field].to_i
           
           end
         end
